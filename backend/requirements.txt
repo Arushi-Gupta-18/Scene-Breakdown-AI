@@ -1,0 +1,10 @@
+python-dotenv
+fastapi
+uvicorn
+python-multipart
+ultralytics
+torch
+torchvision
+pillow
+numpy
+google-generativeai
