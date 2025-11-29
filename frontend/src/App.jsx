@@ -1,15 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Upload, Camera, Brain, Layers, Zap, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { Upload, Camera, Brain, Layers, Zap, Loader2, Moon, Sun } from 'lucide-react';
 import './styles.css';
 
 function App() {
+  // 1. Theme State (Initialize from localStorage or default to Dark)
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    return saved ? JSON.parse(saved) : true;
+  });
+
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // 2. Apply Theme to HTML tag
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+    localStorage.setItem('theme', JSON.stringify(isDarkMode));
+  }, [isDarkMode]);
+
+  const toggleTheme = () => setIsDarkMode(!isDarkMode);
+
+  // --- Handlers ---
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -43,6 +58,12 @@ function App() {
 
   return (
     <div className="container">
+      
+      {/* --- Theme Toggle Button --- */}
+      <button className="theme-toggle" onClick={toggleTheme} aria-label="Toggle Theme">
+        {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+      </button>
+
       <header>
         <h1>Intelligent Scene Breakdown</h1>
         <p className="subtitle">Visual Perception • Spatial Logic • Generative Reasoning</p>
@@ -72,7 +93,7 @@ function App() {
               <img src={preview} alt="Preview" className="preview-img" />
             </div>
             <div style={{ marginTop: '20px' }}>
-              <label htmlFor="fileInput" style={{ color: '#38bdf8', cursor: 'pointer', textDecoration: 'underline' }}>
+              <label htmlFor="fileInput" style={{ color: 'var(--accent-color)', cursor: 'pointer', textDecoration: 'underline' }}>
                 Choose a different image
               </label>
             </div>
@@ -98,10 +119,10 @@ function App() {
           {/* Left: Annotated Image */}
           <div className="card">
             <div className="card-header">
-              <Camera color="#38bdf8" />
+              <Camera className="icon-large" size={24} />
               <h3 className="card-title">Computer Vision</h3>
             </div>
-            <div className="preview-container" style={{ marginTop: '0' }}>
+            <div className="preview-container" style={{ marginTop: '0', border: 'none', boxShadow: 'none' }}>
               <img src={result.image_data} alt="Processed" className="preview-img" />
             </div>
           </div>
@@ -109,7 +130,7 @@ function App() {
           {/* Right: AI Analysis */}
           <div className="card">
             <div className="card-header">
-              <Brain color="#38bdf8" />
+              <Brain className="icon-large" size={24} />
               <h3 className="card-title">Gemini Interpretation</h3>
             </div>
 
@@ -123,8 +144,8 @@ function App() {
             </div>
 
             <div className="card-header" style={{ borderBottom: 'none', paddingBottom: '5px', marginBottom: '10px' }}>
-              <Layers color="#38bdf8" size={18} />
-              <h4 style={{ margin: 0, fontSize: '1rem', color: '#cbd5e1' }}>Spatial Logic Engine</h4>
+              <Layers className="icon-large" size={18} />
+              <h4 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-muted)' }}>Spatial Logic Engine</h4>
             </div>
             
             <ul className="spatial-list">
